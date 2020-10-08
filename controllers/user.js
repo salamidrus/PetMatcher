@@ -47,10 +47,36 @@ exports.Login = async (req, res, next) => {
         token: token,
       });
     } else {
-      res.status(404).json({
-        msg: "Password is wrong!",
+      next({
+        message: "Wrong Password",
       });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.UpdateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return next({ message: "Missing ID params" });
+
+    const user = await User.findById(id);
+
+    if (!user) return next({ message: `There is no user with _id:${id}` });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Successfully update a user!",
+      data: updatedUser,
+    });
   } catch (err) {
     next(err);
   }
