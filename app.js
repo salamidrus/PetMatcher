@@ -21,9 +21,11 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => console.log("Connected to MongoDB"));
 
 // routes
-// const userRoutes = require("./routes/user");
+const userRoutes = require("./routes/user");
+const errorHandler = require("./middlewares/errorhandler");
 
-// app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Listening to ${PORT}`));
