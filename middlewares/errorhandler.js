@@ -13,7 +13,7 @@ module.exports = (err, req, res, next) => {
     } else {
       res.status(400).json({
         success: false,
-        message: `${err.name}: ${err.message}`,
+        message: err.message,
       });
     }
   }
