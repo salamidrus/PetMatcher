@@ -16,9 +16,5 @@ module.exports = (err, req, res, next) => {
         message: `${err.name}: ${err.message}`,
       });
     }
-    res.status(500).json({
-      success: false,
-      message: "Something failed",
-    });
   }
 };
