@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const { encryptPwd } = require("../helpers/bcrypt");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = new Schema({
   email: {
@@ -12,10 +13,15 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true,
     required: true,
+    uniqueCaseInsensitive: true,
   },
   password: {
     type: String,
     required: true,
+    match: [
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      "Password minimum eight characters, at least one letter and one number",
+    ],
   },
   fullName: {
     type: String,
@@ -27,6 +33,7 @@ const userSchema = new Schema({
       /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/,
       "Please input in mobile number format, example:  (+44)(0)20-12341234 or 02012341234 or +44 (0) 1234-1234 ",
     ],
+    uniqueCaseInsensitive: true,
   },
   profilePhoto: {
     type: String,
@@ -43,6 +50,8 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+userSchema.plugin(uniqueValidator);
 
 const user = mongoose.model("User", userSchema);
 

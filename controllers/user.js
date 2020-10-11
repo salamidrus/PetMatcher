@@ -1,6 +1,7 @@
 const { User } = require("../models/user");
 const { decryptPwd } = require("../helpers/bcrypt");
 const { tokenGenerator } = require("../helpers/jwt");
+const { post } = require("../routes/user");
 
 exports.GetAllUser = async (req, res, next) => {
   try {
@@ -18,7 +19,8 @@ exports.GetAllUser = async (req, res, next) => {
 
 exports.Register = async (req, res, next) => {
   try {
-    let data = await User.create(req.body);
+    const { email, password } = req.body;
+    let data = await User.create({ email: email, password: password });
 
     res.status(201).json({
       success: true,
@@ -66,14 +68,22 @@ exports.UpdateUser = async (req, res, next) => {
 
     if (!user) return next({ message: `There is no user with _id:${id}` });
 
-    if (req.file && req.file.fieldname && req.file.path) {
-      req.body.profilePhoto = req.file.path;
-    }
+    // update inputs
+    const { email, fullName, mobileNumber, posts } = req.body;
+    let obj = {};
+
+    if (email) obj.email = email;
+    if (fullName) obj.fullName = fullName;
+    if (mobileNumber) obj.mobileNumber = mobileNumber;
+    if (posts || Array.isArray(posts)) obj.posts = posts;
+
+    if (req.file && req.file.fieldname && req.file.path)
+      obj.profilePhoto = req.file.path;
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: req.body },
-      { new: true }
+      { $set: obj },
+      { new: true, runValidators: true }
     );
 
     res.status(201).json({
