@@ -50,7 +50,7 @@ exports.Login = async (req, res, next) => {
       });
     } else {
       next({
-        message: "Wrong Password",
+        message: "Wrong Password!",
       });
     }
   } catch (err) {
