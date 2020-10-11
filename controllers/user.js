@@ -1,7 +1,6 @@
 const { User } = require("../models/user");
 const { decryptPwd } = require("../helpers/bcrypt");
 const { tokenGenerator } = require("../helpers/jwt");
-const { post } = require("../routes/user");
 
 exports.GetAllUser = async (req, res, next) => {
   try {
