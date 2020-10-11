@@ -1,40 +1,38 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-  email: {
+const postSchema = new Schema({
+  name: {
     type: String,
-    match: [
-      /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/,
-      "Please input in email format, example: asmith@mactec.com or foo12@foo.edu or bob.smith@foo.tv ",
-    ],
-    lowercase: true,
     trim: true,
     required: true,
   },
-  password: {
+  gender: {
     type: String,
-    required: true,
+    enum: ["Male", "Female"],
   },
-  fullName: {
+  age: {
+    type: Number,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  location: {
     type: String,
-    trim: true,
   },
-  mobileNumber: {
-    type: String,
-    match: [
-      /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/,
-      "Please input in mobile number format, example:  (+44)(0)20-12341234 or 02012341234 or +44 (0) 1234-1234 ",
-    ],
-  },
-  profilePhoto: {
+  status: { type: Boolean, default: 1 },
+  posts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+  likes: { type: Number, default: 0 },
+  comments: { type: Schema.Types.ObjectId, ref: "Comment" },
+  image: {
     type: String,
     default:
-      "https://res.cloudinary.com/drovood07/image/upload/v1574847777/uploads/doctor_xp3dmi.png",
+      "https://res.cloudinary.com/di02ey9t7/image/upload/v1602432289/FAVPNG_samsung-galaxy-a8-a8-user-login-telephone-avatar_peutPpGD_l18hzf.png",
   },
-  posts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+  postOwner: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
-const user = mongoose.model("User", userSchema);
+const post = mongoose.model("Post", postSchema);
 
-exports.User = user;
+exports.Post = post;
