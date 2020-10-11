@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { encryptPwd } = require("../helpers/bcrypt");
 
 const userSchema = new Schema({
   email: {
@@ -34,14 +33,6 @@ const userSchema = new Schema({
       "https://res.cloudinary.com/drovood07/image/upload/v1574847777/uploads/doctor_xp3dmi.png",
   },
   posts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-});
-
-userSchema.pre("save", async function (next) {
-  // check if password is present and is modified.
-  if (this.password && this.isModified("password")) {
-    this.password = await encryptPwd(this.password);
-  }
-  next();
 });
 
 const user = mongoose.model("User", userSchema);
