@@ -17,7 +17,7 @@ exports.GetAllCategories = async (req, res, next) => {
 exports.Create = async (req, res, next) => {
   try {
     const { name } = req.body;
-    let data = await User.create({ name: name });
+    let data = await Category.create({ name: name });
 
     res.status(201).json({
       success: true,

@@ -13,5 +13,6 @@ router.put(
   multerUpload.single("profilePhoto"),
   userControllers.UpdateUser
 );
+router.delete("/delete/:id", userControllers.DeleteUser);
 
 module.exports = router;
