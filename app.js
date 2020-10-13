@@ -29,11 +29,13 @@ db.once("open", () => console.log("Connected to MongoDB"));
 const userRoutes = require("./routes/user");
 const categoryRoutes = require("./routes/category");
 const commentRoutes = require("./routes/comment");
+const postRoutes = require("./routes/post");
 const errorHandler = require("./middlewares/errorhandler");
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/comment", commentRoutes);
+app.use("/api/v1/post", postRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;

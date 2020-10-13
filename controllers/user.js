@@ -110,7 +110,7 @@ exports.DeleteUser = async (req, res, next) => {
       if (!doc) {
         return res.status(400).json({ success: false, err: "Data not found" });
       }
-      return res.status(200).json({ success: true, doc });
+      return res.status(200).json({ success: true, data: doc });
     });
   } catch (err) {
     next(err);

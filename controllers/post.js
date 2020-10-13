@@ -1,12 +1,12 @@
-const { Comment } = require("../models/comment");
+const { Post } = require("../models/post");
 
-exports.GetAllComments = async (req, res, next) => {
+exports.GetAllPosts = async (req, res, next) => {
   try {
-    let data = await Comment.find();
+    let data = await Post.find().populate("postOwner");
 
     res.status(200).json({
       success: true,
-      message: "Successfully retrieve comments!",
+      message: "Successfully retrieve post!",
       data,
     });
   } catch (err) {
@@ -16,18 +16,16 @@ exports.GetAllComments = async (req, res, next) => {
 
 exports.Create = async (req, res, next) => {
   try {
-    const { content, post } = req.body;
-    const userId = req.userData._id;
+    if (req.file && req.file.fieldname && req.file.path)
+      req.body.image = req.file.path;
 
-    let data = await Comment.create({
-      content: content,
-      post: post,
-      sender: userId,
-    });
+    req.body.postOwner = req.userData._id;
+
+    let data = await Post.create(req.body);
 
     res.status(201).json({
       success: true,
-      message: "Successfully create a comment!",
+      message: "Successfully create a post!",
       data,
     });
   } catch (err) {
@@ -41,19 +39,21 @@ exports.Update = async (req, res, next) => {
 
     if (!id) return next({ message: "Missing ID params" });
 
-    const comment = await Comment.findById(id);
+    const post = await Post.findById(id);
 
-    if (!comment)
-      return next({ message: `There is no comment with _id:${id}` });
+    if (!post) return next({ message: `There is no post with _id:${id}` });
 
     // update inputs
-    const { content, post } = req.body;
     let obj = {};
 
-    if (content) obj.content = content;
-    if (post) obj.post = post;
+    for (let key in req.body) {
+      obj[key] = req.body[key];
+    }
 
-    const updatedComment = await Comment.findByIdAndUpdate(
+    if (req.file && req.file.fieldname && req.file.path)
+      obj.image = req.file.path;
+
+    const updatedPost = await Post.findByIdAndUpdate(
       id,
       { $set: obj },
       { new: true, runValidators: true }
@@ -61,8 +61,8 @@ exports.Update = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "Successfully update a comment!",
-      data: updatedComment,
+      message: "Successfully update a post!",
+      data: updatedPost,
     });
   } catch (err) {
     next(err);
@@ -75,12 +75,11 @@ exports.Delete = async (req, res, next) => {
 
     if (!id) return next({ message: "Missing ID params" });
 
-    const comment = await Comment.findById(id);
+    const post = await Post.findById(id);
 
-    if (!comment)
-      return next({ message: `There is no comment with _id:${id}` });
+    if (!post) return next({ message: `There is no post with _id:${id}` });
 
-    await Comment.findByIdAndRemove(id, function (error, doc, result) {
+    await Post.findByIdAndRemove(id, function (error, doc, result) {
       if (error) throw "Failed To delete ";
       if (!doc) {
         return res.status(400).json({ success: false, err: "Data not found" });
