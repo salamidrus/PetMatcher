@@ -23,7 +23,9 @@ const postSchema = new Schema(
       type: String,
     },
     status: { type: Boolean, default: 1 },
-    likes: { type: Number, default: 0 },
+    likeCount: { type: Number, default: 0 },
+    likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],
+    commentCount: { type: Number, default: 0 },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     image: {
       type: String,
