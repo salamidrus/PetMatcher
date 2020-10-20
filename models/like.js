@@ -9,7 +9,6 @@ const likeSchema = new Schema(
       required: true,
     },
     post: { type: Schema.Types.ObjectId, ref: "Post" },
-    sender: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
