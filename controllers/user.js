@@ -20,11 +20,13 @@ exports.Register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     let data = await User.create({ email: email, password: password });
+    const token = tokenGenerator(data);
 
     res.status(201).json({
       success: true,
       message: "Successfully create a user!",
       data,
+      token,
     });
   } catch (err) {
     next(err);
