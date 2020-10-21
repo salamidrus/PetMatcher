@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const locationSchema = new Schema({
+  street: { type: String },
+  city: { type: String },
+  postalCode: { type: String },
+  latitude: { type: String },
+  longitude: { type: String },
+});
+
 const postSchema = new Schema(
   {
     name: {
@@ -22,9 +30,7 @@ const postSchema = new Schema(
     breed: {
       type: String,
     },
-    location: {
-      type: String,
-    },
+    location: locationSchema,
     status: { type: Boolean, default: 1 },
     likeCount: { type: Number, default: 0 },
     likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],

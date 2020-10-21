@@ -16,12 +16,24 @@ exports.GetAllPosts = async (req, res, next) => {
 
 exports.Create = async (req, res, next) => {
   try {
+    let obj = new Post();
+    obj.location = {};
+    let locationKey = ["street", "city", "postalCode", "latitude", "longitude"];
+
+    for (let key in req.body) {
+      if (locationKey.indexOf(key) != -1) {
+        obj.location[key] = req.body[key];
+      } else {
+        obj[key] = req.body[key];
+      }
+    }
+
     if (req.file && req.file.fieldname && req.file.path)
-      req.body.image = req.file.path;
+      obj.image = req.file.path;
 
-    req.body.postOwner = req.userData._id;
+    obj.postOwner = req.userData._id;
 
-    let data = await Post.create(req.body);
+    let data = await obj.save();
 
     res.status(201).json({
       success: true,
@@ -44,20 +56,20 @@ exports.Update = async (req, res, next) => {
     if (!post) return next({ message: `There is no post with _id:${id}` });
 
     // update inputs
-    let obj = {};
+    let locationKey = ["street", "city", "postalCode", "latitude", "longitude"];
 
     for (let key in req.body) {
-      obj[key] = req.body[key];
+      if (locationKey.indexOf(key) != -1) {
+        post.location[key] = req.body[key];
+      } else {
+        post[key] = req.body[key];
+      }
     }
 
     if (req.file && req.file.fieldname && req.file.path)
-      obj.image = req.file.path;
+      post.image = req.file.path;
 
-    const updatedPost = await Post.findByIdAndUpdate(
-      id,
-      { $set: obj },
-      { new: true, runValidators: true }
-    );
+    const updatedPost = await post.save();
 
     res.status(201).json({
       success: true,
