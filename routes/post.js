@@ -21,5 +21,6 @@ router.put(
 );
 router.delete("/delete/:id", Authentication, postControllers.Delete);
 router.post("/like/:postId", Authentication, likeControllers.like);
+router.post("/unlike/:postId", Authentication, likeControllers.unlike);
 
 module.exports = router;
