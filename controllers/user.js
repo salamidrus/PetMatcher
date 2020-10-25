@@ -19,7 +19,7 @@ exports.GetAllUser = async (req, res, next) => {
 exports.ViewUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    let data = await User.findById(id);
+    let data = await User.findById(id).populate("likes", "-_id post");
 
     res.status(200).json({
       success: true,
