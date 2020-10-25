@@ -27,6 +27,7 @@ const userSchema = new Schema(
     fullName: {
       type: String,
       trim: true,
+      required: true,
     },
     mobileNumber: {
       type: String,
@@ -41,7 +42,8 @@ const userSchema = new Schema(
       default:
         "https://res.cloudinary.com/drovood07/image/upload/v1574847777/uploads/doctor_xp3dmi.png",
     },
-    posts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    likes: [{ type: Schema.Types.ObjectId, ref: "Like" }],
   },
   { timestamps: true }
 );

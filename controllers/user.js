@@ -16,10 +16,29 @@ exports.GetAllUser = async (req, res, next) => {
   }
 };
 
+exports.ViewUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let data = await User.findById(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieve user!",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.Register = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    let data = await User.create({ email: email, password: password });
+    const { email, password, fullName } = req.body;
+    let data = await User.create({
+      email: email,
+      password: password,
+      fullName: fullName,
+    });
     const token = tokenGenerator(data);
 
     res.status(201).json({
@@ -42,7 +61,7 @@ exports.Login = async (req, res, next) => {
       return next({ message: `User with email:${email} is not found!` });
     }
 
-    if (decryptPwd(password, user.password)) {
+    if (await decryptPwd(password, user.password)) {
       const token = tokenGenerator(user);
       res.status(200).json({
         success: true,
