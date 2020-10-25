@@ -30,10 +30,10 @@ const postSchema = new Schema(
     breed: {
       type: String,
     },
+
     location: locationSchema,
     status: { type: Boolean, default: 1 },
     likeCount: { type: Number, default: 0 },
-    likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],
     commentCount: { type: Number, default: 0 },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     image: {

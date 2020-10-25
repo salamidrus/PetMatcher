@@ -3,12 +3,8 @@ const { Schema } = mongoose;
 
 const likeSchema = new Schema(
   {
-    content: {
-      type: String,
-      trim: true,
-      required: true,
-    },
     post: { type: Schema.Types.ObjectId, ref: "Post" },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

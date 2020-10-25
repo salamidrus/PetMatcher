@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Authentication } = require("../middlewares/auth");
 const postControllers = require("../controllers/post");
+const likeControllers = require("../controllers/like");
 const multer = require("../middlewares/multer");
 
 router.post(
@@ -19,5 +20,6 @@ router.put(
   postControllers.Update
 );
 router.delete("/delete/:id", Authentication, postControllers.Delete);
+router.post("/like/:postId", Authentication, likeControllers.like);
 
 module.exports = router;
