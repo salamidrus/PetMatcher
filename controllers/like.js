@@ -11,6 +11,13 @@ exports.like = async (req, res, next) => {
 
   if (!postFound) next({ status: 400, message: "Post is not found!" });
 
+  let checkLiked = await Like.findOne({ user: id, post: post });
+
+  if (checkLiked)
+    return res
+      .status(400)
+      .json({ success: false, message: "You have liked this post!" });
+
   let data = await Like.create({ user: id, post: post });
 
   await User.findByIdAndUpdate(id, { $push: { likes: data._id } });
