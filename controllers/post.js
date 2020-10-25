@@ -1,4 +1,5 @@
 const { Post } = require("../models/post");
+const { User } = require("../models/user");
 
 exports.GetAllPosts = async (req, res, next) => {
   try {
@@ -16,6 +17,7 @@ exports.GetAllPosts = async (req, res, next) => {
 
 exports.Create = async (req, res, next) => {
   try {
+    const userId = req.userData._id;
     let obj = new Post();
     obj.location = {};
     let locationKey = ["street", "city", "postalCode", "latitude", "longitude"];
@@ -31,9 +33,11 @@ exports.Create = async (req, res, next) => {
     if (req.file && req.file.fieldname && req.file.path)
       obj.image = req.file.path;
 
-    obj.postOwner = req.userData._id;
+    obj.postOwner = userId;
 
     let data = await obj.save();
+
+    await User.findByIdAndUpdate(userId, { $push: { posts: data._id } });
 
     res.status(201).json({
       success: true,
