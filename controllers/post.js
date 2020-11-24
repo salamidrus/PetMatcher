@@ -3,7 +3,14 @@ const { User } = require("../models/user");
 
 exports.GetAllPosts = async (req, res, next) => {
   try {
-    let data = await Post.find().populate("postOwner");
+    const { page = 1, limit = 10 } = req.query;
+
+    let data = await Post.find()
+      .populate("postOwner")
+      .sort("createdAt")
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
 
     res.status(200).json({
       success: true,
