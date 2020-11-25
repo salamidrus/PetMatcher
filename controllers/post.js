@@ -108,8 +108,22 @@ exports.Delete = async (req, res, next) => {
       if (!doc) {
         return res.status(400).json({ success: false, err: "Data not found" });
       }
+      let meetingId = await Meeting.find({
+        $or: [
+          { meetingOwner: post.postOwner },
+          { requestOwner: post.postOwner },
+        ],
+      });
+
+      let meetingMap = [];
+      if (meetingId) meetingMap.map((el) => el._id);
+
       await User.findByIdAndUpdate(post.postOwner, { $pull: { posts: id } });
-      await Meeting.deleteMany({ post: id });
+      await User.updateMany(
+        { meetings: { $in: meetingMap } },
+        { $pull: { meetings: { $in: meetingMap } } }
+      );
+      await Meeting.deleteMany({ _id: meetingMap });
       return res.status(200).json({ success: true, data: doc });
     });
   } catch (err) {
