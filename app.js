@@ -30,12 +30,14 @@ const userRoutes = require("./routes/user");
 const categoryRoutes = require("./routes/category");
 const commentRoutes = require("./routes/comment");
 const postRoutes = require("./routes/post");
+const meetingRoutes = require("./routes/meeting");
 const errorHandler = require("./middlewares/errorhandler");
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/comment", commentRoutes);
 app.use("/api/v1/post", postRoutes);
+app.use("/api/v1/meeting", meetingRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;

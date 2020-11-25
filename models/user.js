@@ -44,6 +44,7 @@ const userSchema = new Schema(
     },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     likes: [{ type: Schema.Types.ObjectId, ref: "Like" }],
+    meetings: [{ type: Schema.Types.ObjectId, ref: "Meeting" }],
   },
   { timestamps: true }
 );
